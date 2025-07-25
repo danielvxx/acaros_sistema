@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise {{ analise.id_analise }} | Sistema de Cultivo de Ácaros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #dee2e6;
+            --text-color: #495057;
+            --text-light: #6c757d;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .header h1 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: 500;
+        }
+        
+        .header p {
+            margin: 0.5rem 0 0;
+            color: var(--text-light);
+        }
+        
+        .header strong {
+            color: var(--dark-color);
+        }
+        
+        .qr-code {
+            position: absolute;
+            top: 0;
+            right: 0;
+            text-align: center;
+        }
+        
+        .qr-code img {
+            width: 150px;
+            height: 150px;
+            border: 1px solid var(--border-color);
+            padding: 5px;
+            background: white;
+        }
+        
+        .qr-code p {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .info-box {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-box h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .info-box p {
+            margin: 0.75rem 0;
+        }
+        
+        .fotos-container {
+            margin: 2rem 0;
+        }
+        
+        .fotos-container h2 {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .fotos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .foto {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .foto:hover {
+            transform: translateY(-5px);
+        }
+        
+        .foto img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .foto-caption {
+            padding: 0.75rem;
+            text-align: center;
+            background: var(--light-color);
+            font-size: 0.9rem;
+        }
+        
+        /* Hierarquia */
+        .relacionamentos {
+            margin: 3rem 0 1rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+        
+        .relacionamentos h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .arvore-genealogica {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .geracao {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .geracao-titulo {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .colonia {
+            padding: 0.75rem 1.25rem;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 6px;
+            margin: 0.25rem 0;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .colonia:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .colonia.atual {
+            background: var(--success-color);
+            font-weight: 500;
+        }
+        
+        .conector {
+            height: 30px;
+            width: 2px;
+            background: var(--secondary-color);
+            margin: 0.25rem 0;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .erro {
+            color: var(--danger-color);
+            padding: 1rem;
+            background: #f8d7da;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .qr-code {
+                position: static;
+                margin-bottom: 1.5rem;
+                text-align: center;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .fotos {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://via.placeholder.com/150x50?text=Ácaros+Lab" alt="Laboratório de Ácaros">
+        </div>
+        
+        {% if not colonia %}
+            <div class="erro">
+                <h2>Erro: Informações da colônia não disponíveis</h2>
+                <p>Não foi possível carregar os dados da colônia associada a esta análise</p>
+            </div>
+        {% else %}
+            <div class="header">
+                <div class="qr-code">
+                    <img src="{{ qr_code_url }}" alt="QR Code">
+                    <p>Scan me</p>
+                </div>
+                
+                <h1>Análise Microscópica - {{ analise.id_analise }}</h1>
+                <p><strong>Data da Análise:</strong> {{ analise.data_analise }}</p>
+                <p><strong>Espécie:</strong> {{ colonia.especie }}</p>
+                <p><strong>Estágio:</strong> {{ analise.estagio_desenvolvimento }}</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <h2><i class="fas fa-vial" style="margin-right: 10px;"></i>Informações da Colônia</h2>
+                    <p><strong>Código:</strong> {{ colonia.codigo_colonia }}</p>
+                    <p><strong>Espécie:</strong> {{ colonia.especie }}</p>
+                    <p><strong>Status:</strong> {{ colonia.status }}</p>
+                    <p><strong>Data de Início:</strong> {{ colonia.data_inicio }}</p>
+                    {% if colonia.numero_passagem is defined %}
+                    <p><strong>Passagem:</strong> {{ colonia.numero_passagem }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="info-box">
+                    <h2><i class="fas fa-flask" style="margin-right: 10px;"></i>Informações da Amostra</h2>
+                    {% if amostra %}
+                        <p><strong>Data de Coleta:</strong> {{ amostra.data_coleta }}</p>
+                        <p><strong>Excipiente:</strong> {{ amostra.excipiente }}</p>
+                        <p><strong>Local de Amostragem:</strong> 
+                            {% if amostra.local_amostragem is iterable and amostra.local_amostragem is not string %}
+                                {{ amostra.local_amostragem|join(', ') }}
+                            {% else %}
+                                {{ amostra.local_amostragem or "Não especificado" }}
+                            {% endif %}
+                        </p>
+                        <p><strong>Observações:</strong> {{ amostra.observacoes or "Nenhuma" }}</p>
+                    {% else %}
+                        <p class="erro">Nenhuma informação de amostra disponível</p>
+                    {% endif %}
+                </div>
+
+                <div class="info-box">
+                    <h2><i class="fas fa-microscope" style="margin-right: 10px;"></i>Informações da Análise</h2>
+                    <p><strong>Data:</strong> {{ analise.data_analise }}</p>
+                    <p><strong>Estágio:</strong> {{ analise.estagio_desenvolvimento }}</p>
+                    <p><strong>Observações:</strong> {{ analise.observacoes or "Nenhuma" }}</p>
+                </div>
+            </div>
+
+            {% if fotos %}
+            <div class="fotos-container">
+                <h2><i class="fas fa-camera" style="margin-right: 10px;"></i>Fotos da Análise</h2>
+                <div class="fotos">
+                    {% for foto in fotos %}
+                        <div class="foto">
+                            <img src="{{ url_for('servir_foto', filename=foto) }}" 
+                                 alt="Foto da análise {{ loop.index }}">
+                            <div class="foto-caption">Foto {{ loop.index }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Seção de Hierarquia -->
+            <div class="relacionamentos">
+                <h2><i class="fas fa-project-diagram" style="margin-right: 10px;"></i>Árvore Genealógica da Colônia</h2>
+                <div class="arvore-genealogica">
+                    {% if hierarquia.avo %}
+                    <div class="geracao">
+                        <div class="geracao-titulo">Avó</div>
+                        <div class="colonia">
+                            <a href="{{ url_for('menu_colonia', codigo_colonia=hierarquia.avo.codigo_colonia) }}">
+                                <i class="fas fa-arrow-circle-right" style="margin-right: 5px;"></i>
+                                {{ hierarquia.avo.codigo_colonia }}
+                            </a>
+                        </div>
+                        <div class="conector"></div>
+                    </div>
+                    {% endif %}
+
+                    {% if hierarquia.mae %}
+                    <div class="geracao">
+                        <div class="geracao-titulo">Mãe</div>
+                        <div class="colonia">
+                            <a href="{{ url_for('menu_colonia', codigo_colonia=hierarquia.mae.codigo_colonia) }}">
+                                <i class="fas fa-arrow-circle-right" style="margin-right: 5px;"></i>
+                                {{ hierarquia.mae.codigo_colonia }}
+                            </a>
+                        </div>
+                        <div class="conector"></div>
+                    </div>
+                    {% endif %}
+
+                    <div class="geracao">
+                        <div class="geracao-titulo">Colônia Atual</div>
+                        <div class="colonia atual">
+                            <i class="fas fa-star" style="margin-right: 5px;"></i>
+                            {{ colonia.codigo_colonia }}
+                        </div>
+                        {% if hierarquia.filhas %}
+                        <div class="conector"></div>
+                        {% endif %}
+                    </div>
+
+                    {% if hierarquia.filhas %}
+                    <div class="geracao">
+                        <div class="geracao-titulo">Derivadas</div>
+                        {% for filha in hierarquia.filhas %}
+                        <div class="colonia">
+                            <a href="{{ url_for('menu_colonia', codigo_colonia=filha.codigo_colonia) }}">
+                                <i class="fas fa-arrow-circle-right" style="margin-right: 5px;"></i>
+                                {{ filha.codigo_colonia }}
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Colônia Inicial | Sistema de Cultivo de Ácaros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #dee2e6;
+            --text-color: #495057;
+            --text-light: #6c757d;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 15px;
+        }
+        
+        .header-card {
+            background: linear-gradient(135deg, var(--primary-color), #1a252f);
+            color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-card h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .card-header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: var(--light-color);
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background-color: white;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23495057' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219955;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.2);
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            border: 1px solid transparent;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border-color: #bee5eb;
+        }
+        
+        .mt-3 {
+            margin-top: 1rem;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .header-card, .card-body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://via.placeholder.com/150x50?text=Ácaros+Lab" alt="Laboratório de Ácaros">
+        </div>
+        
+        <div class="header-card">
+            <h1>Criar Nova Colônia Inicial</h1>
+            <p>Registre uma nova colônia base para cultivo</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Informações da Colônia
+            </div>
+            <div class="card-body">
+                <form id="criarColoniaForm">
+                    <div class="form-group">
+                        <label for="codigo_colonia">Código da Colônia</label>
+                        <input type="text" id="codigo_colonia" name="codigo_colonia" class="form-control" required>
+                        <small class="text-muted">Utilize o padrão de codificação da empresa</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="especie">Espécie</label>
+                        <input type="text" id="especie" name="especie" class="form-control" required placeholder="Ex: Dermatophagoides pteronyssinus">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_inicio">Data de Início</label>
+                        <input type="date" id="data_inicio" name="data_inicio" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lote_racao">Lote de Ração</label>
+                        <select id="lote_racao" name="lote_racao" class="form-control" required>
+                            <option value="">Selecione um lote</option>
+                            {% for racao in racoes %}
+                            <option value="{{ racao.lote }}">{{ racao.lote }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipo_cultivo">Tipo de Cultivo</label>
+                        <select id="tipo_cultivo" name="tipo_cultivo" class="form-control" required>
+                            <option value="novo">Novo</option>
+                            <option value="antigo">Antigo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="observacoes">Observações</label>
+                        <textarea id="observacoes" name="observacoes" class="form-control" placeholder="Descreva qualquer informação relevante sobre esta colônia"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        Criar Colônia Inicial
+                    </button>
+                </form>
+                <div id="resultado" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Definir data atual
+            document.getElementById('data_inicio').value = new Date().toISOString().split('T')[0];
+            
+            // Formulário de criação
+            document.getElementById('criarColoniaForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const resultadoDiv = document.getElementById('resultado');
+                resultadoDiv.innerHTML = '<div class="alert alert-info">Criando colônia...</div>';
+                
+                try {
+                    const response = await fetch('/criar_colonia_inicial', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        resultadoDiv.innerHTML = `
+                            <div class="alert alert-success">
+                                <strong>Colônia criada com sucesso!</strong>
+                                <p>Código: ${data.data.colonia.codigo_colonia}</p>
+                                <p>Espécie: ${data.data.colonia.especie}</p>
+                                <p>Número de Passagem: ${data.data.colonia.numero_passagem || 0}</p>
+                            </div>
+                        `;
+                        // Resetar formulário
+                        this.reset();
+                        document.getElementById('data_inicio').value = new Date().toISOString().split('T')[0];
+                    } else {
+                        resultadoDiv.innerHTML = `
+                            <div class="alert alert-danger">
+                                <strong>Erro ao criar colônia:</strong>
+                                <p>${data.message}</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    resultadoDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <strong>Erro na comunicação com o servidor:</strong>
+                            <p>${error.message}</p>
+                        </div>
+                    `;
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

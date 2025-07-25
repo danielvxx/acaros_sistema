@@ -1,0 +1,13 @@
+﻿# Neo4j
+neo4j_data/
+app/neo4j_data/
+analises/
+
+# Arquivos grandes
+*.db
+*.transaction.db.0
+
+# Python/Flask
+__pycache__/
+*.pyc
+.env

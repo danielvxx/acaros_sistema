@@ -1,0 +1,35 @@
+services:
+  web:
+    build: ./app
+    volumes:
+      - ./analises:/app/analises
+    ports:
+      - "5000:5000"
+    environment:
+      - NEO4J_BOLT_URL=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=@lmq2023
+      - UPLOAD_FOLDER=/app/analises
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    restart: unless-stopped
+
+  neo4j:
+    image: neo4j:5.2.0
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./neo4j_data:/data
+    environment:
+      NEO4J_dbms_default__database: neo4j
+      NEO4J_AUTH: neo4j/@lmq2023
+      NEO4J_dbms_allow__upgrade: "true"
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "@lmq2023", "RETURN 1"]
+      interval: 30s
+      timeout: 60s
+      retries: 10
+      start_period: 120s
+    restart: unless-stopped

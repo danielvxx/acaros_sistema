@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Colônia {{ colonia.codigo_colonia }} | Sistema de Cultivo de Ácaros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #dee2e6;
+            --text-color: #495057;
+            --text-light: #6c757d;
+        }
+
+        /* No seu CSS existente */
+.table-histórico {
+    font-size: 0.9rem;
+}
+.table-histórico th {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+}
+.badge-warning {
+    background-color: #ffc107;
+}
+.badge-success {
+    background-color: #28a745;
+}
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header-card {
+            background: linear-gradient(135deg, var(--primary-color), #1a252f);
+            color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-card h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+        
+        .header-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
+        .info-badge {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 0.5rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-badge strong {
+            margin-right: 5px;
+            font-weight: 500;
+        }
+        
+        .info-badge.contaminada {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 3px solid var(--danger-color);
+        }
+        
+        .info-badge.prevaleceu {
+            background-color: rgba(39, 174, 96, 0.2);
+            border-left: 3px solid var(--success-color);
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .table-historico {
+    font-size: 0.85rem;
+}
+.table-historico th {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+}
+        
+        .card-header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header .icon {
+            font-size: 1.2rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: var(--light-color);
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background-color: white;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23495057' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        select.form-control[multiple] {
+            height: auto;
+            min-height: 120px;
+            padding: 0.5rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219955;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.2);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            border: 1px solid transparent;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border-color: #bee5eb;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeeba;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table th {
+            background-color: var(--light-color);
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .table tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 600;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 10px;
+        }
+        
+        .badge-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .badge-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .badge-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .badge-info {
+            background-color: var(--info-color);
+            color: white;
+        }
+        
+        .badge-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .badge-analise {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35em 0.65em;
+            border-radius: 12px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 0.8rem;
+            margin-right: 0.25rem;
+            text-decoration: none;
+        }
+        
+        .badge-analise:hover {
+            background-color: #2980b9;
+            text-decoration: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .d-flex {
+            display: flex;
+        }
+        
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        
+        .gap-2 {
+            gap: 0.5rem;
+        }
+        
+        .mt-3 {
+            margin-top: 1rem;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .text-muted {
+            color: var(--text-light);
+        }
+        
+        .preview-foto {
+            max-width: 100px;
+            max-height: 100px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            padding: 3px;
+            background: white;
+            object-fit: cover;
+        }
+        
+        /* Hierarquia e relacionamentos */
+        .relacionamentos {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+        
+        .relacionamentos h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .arvore-genealogica {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .geracao {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .geracao-titulo {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .colonia {
+            padding: 0.75rem 1.25rem;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 6px;
+            margin: 0.25rem 0;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .colonia:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .colonia.atual {
+            background: var(--success-color);
+            font-weight: 500;
+        }
+        
+        .conector {
+            height: 30px;
+            width: 2px;
+            background: var(--secondary-color);
+            margin: 0.25rem 0;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .header-card, .card-body {
+                padding: 1rem;
+            }
+            
+            .table th,
+            .table td {
+                padding: 0.5rem;
+                font-size: 0.875rem;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://via.placeholder.com/150x50?text=Ácaros+Lab" alt="Laboratório de Ácaros">
+        </div>
+        
+        <div class="header-card">
+            <h1>Controle da Colônia {{ colonia.codigo_colonia }}</h1>
+            <div class="header-info">
+                <span class="info-badge"><strong>Espécie:</strong> 
+        {% if colonia.especie_prevaleceu %}
+            {{ colonia.especie_prevaleceu }} (original: {{ colonia.especie }})
+        {% else %}
+            {{ colonia.especie }}
+        {% endif %}
+    </span>
+                <span class="info-badge"><strong>Status:</strong> {{ colonia.status }}</span>
+                <span class="info-badge"><strong>Início:</strong> {{ colonia.data_inicio }}</span>
+                {% if colonia.numero_passagem is defined %}
+                <span class="info-badge"><strong>Passagem:</strong> {{ colonia.numero_passagem }}</span>
+                {% endif %}
+                <span class="info-badge">
+                    <strong>Tempo ativa:</strong> 
+                    {% if colonia.dias_ativa == 'N/A' %}
+                        N/A
+                    {% else %}
+                        {{ colonia.dias_ativa }} dias
+                    {% endif %}
+                </span>
+              {% if colonia.status_contaminacao == 'ativa' %}
+<span class="info-badge contaminada" style="background-color: #fff3cd; color: #856404; border-left: 3px solid #ffeeba;">
+    <strong>Status Contaminação:</strong> Ativa 
+    {% if colonia.contaminada_por %}
+    ({{ colonia.contaminada_por }})
+    {% else %}
+    (Espécie não identificada)
+    {% endif %}
+</span>
+{% endif %}
+            </div>
+        </div>
+        
+        <!-- Seção de Ações Administrativas -->
+        <div class="card">
+            <div class="card-header">
+                <span><i class="fas fa-cog icon"></i> Ações Administrativas</span>
+            </div>
+            <div class="card-body">
+                <div class="btn-group">
+                    <a href="/colonia/{{ colonia.codigo_colonia }}/criar_derivada" class="btn btn-primary">
+                        <i class="fas fa-code-branch" style="margin-right: 8px;"></i>
+                        Criar Colônia Derivada
+                    </a>
+                    
+                    {% if colonia.status == 'ativa' %}
+                    <button class="btn btn-danger" onclick="inativarColonia()">
+                        <i class="fas fa-power-off" style="margin-right: 8px;"></i>
+                        Inativar Colônia
+                    </button>
+                    {% else %}
+                    <span class="btn btn-secondary disabled">
+                        <i class="fas fa-ban" style="margin-right: 8px;"></i>
+                        Colônia já inativa
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Realimentação -->
+        <div class="card">
+            <div class="card-header">
+                <span><i class="fas fa-utensils icon"></i> Realimentação da Colônia</span>
+            </div>
+            <div class="card-body">
+                <form id="realimentacaoForm">
+                    <div class="form-group">
+                        <label for="lote_racao"><i class="fas fa-tag" style="margin-right: 8px;"></i>Lote de Ração</label>
+                        <select id="lote_racao" name="lote_racao" class="form-control" required>
+                            <option value="">Selecione um lote</option>
+                            {% for racao in racoes %}
+                            <option value="{{ racao.lote }}">{{ racao.lote }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_evento"><i class="fas fa-calendar-alt" style="margin-right: 8px;"></i>Data da Realimentação</label>
+                        <input type="date" id="data_evento" name="data_evento" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="observacoes"><i class="fas fa-clipboard" style="margin-right: 8px;"></i>Observações</label>
+                        <textarea id="observacoes" name="observacoes" class="form-control">Realimentação completa conforme protocolo</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save" style="margin-right: 8px;"></i>
+                        Registrar Realimentação
+                    </button>
+                </form>
+                <div id="realimentacaoResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Seção de Coleta de Amostra -->
+        <div class="card">
+            <div class="card-header">
+                <span><i class="fas fa-flask icon"></i> Coleta de Amostra</span>
+            </div>
+            <div class="card-body">
+                <form id="coletaForm">
+                    <div class="form-group">
+                        <label for="local_amostragem"><i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i>Local de Amostragem</label>
+                        <select id="local_amostragem" name="local_amostragem" class="form-control" multiple required>
+                            <option value="água">Água</option>
+                            <option value="mistura">Mistura</option>
+                            <option value="substrato">Substrato</option>
+                            <option value="ácaros">Ácaros visíveis</option>
+                        </select>
+                        <small class="text-muted">Mantenha pressionado Ctrl para selecionar múltiplos itens</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="excipiente"><i class="fas fa-vial" style="margin-right: 8px;"></i>Excipiente Utilizado</label>
+                        <select id="excipiente" name="excipiente" class="form-control" required>
+                            <option value="">Selecione o excipiente</option>
+                            <option value="Glicerina">Glicerina</option>
+                            <option value="Água destilada">Água destilada</option>
+                            <option value="Salina">Salina</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_coleta"><i class="fas fa-calendar-alt" style="margin-right: 8px;"></i>Data da Coleta</label>
+                        <input type="date" id="data_coleta" name="data_coleta" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="obs_coleta"><i class="fas fa-clipboard" style="margin-right: 8px;"></i>Observações</label>
+                        <textarea id="obs_coleta" name="observacoes" class="form-control" placeholder="Descreva quaisquer observações relevantes durante a coleta"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save" style="margin-right: 8px;"></i>
+                        Registrar Coleta
+                    </button>
+                </form>
+                <div id="coletaResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Seção de Análise de Amostra -->
+        <div class="card">
+            <div class="card-header">
+                <span><i class="fas fa-microscope icon"></i> Análise de Amostra</span>
+            </div>
+            <div class="card-body">
+                <form id="analiseForm">
+                    <div class="form-group">
+                        <label for="amostra_id"><i class="fas fa-vial" style="margin-right: 8px;"></i>Amostra para Análise</label>
+                        <select id="amostra_id" name="amostra_id" class="form-control" required>
+                            <option value="">Carregando amostras disponíveis...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estagio_desenvolvimento"><i class="fas fa-bug" style="margin-right: 8px;"></i>Estágio de Desenvolvimento</label>
+                        <input type="text" id="estagio_desenvolvimento" name="estagio_desenvolvimento" class="form-control" required placeholder="Ex: Ovos, ninfas, adultos">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fotos_analise"><i class="fas fa-camera" style="margin-right: 8px;"></i>Fotos da Análise</label>
+                        <input type="file" 
+                               id="fotos_analise" 
+                               name="fotos_analise" 
+                               class="form-control" 
+                               multiple 
+                               accept="image/*"
+                               onchange="previewFotos()">
+                        <small class="text-muted">Selecione múltiplas fotos (CTRL+Clique)</small>
+                        <div id="preview-fotos" class="mt-2"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caminho_fotos"><i class="fas fa-folder-open" style="margin-right: 8px;"></i>Caminho das Fotos (opcional)</label>
+                        <input type="text" id="caminho_fotos" name="caminho_fotos" class="form-control" placeholder="Caminho ou referência das fotos">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_analise"><i class="fas fa-calendar-alt" style="margin-right: 8px;"></i>Data da Análise</label>
+                        <input type="date" id="data_analise" name="data_analise" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="obs_analise"><i class="fas fa-clipboard" style="margin-right: 8px;"></i>Observações da Análise</label>
+                        <textarea id="obs_analise" name="observacoes" class="form-control" placeholder="Descreva os resultados da análise"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save" style="margin-right: 8px;"></i>
+                        Registrar Análise
+                    </button>
+                </form>
+                <div id="analiseResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Seção de Contaminação -->
+       <div class="card">
+    <div class="card-header">
+        <span><i class="fas fa-biohazard icon"></i> Gerenciar Contaminação</span>
+    </div>
+    <div class="card-body">
+        {% if colonia.status_contaminacao != 'ativa' %}
+        <form id="contaminacaoForm">
+            <div class="form-group">
+                <label for="especie_contaminante"><i class="fas fa-bug" style="margin-right: 8px;"></i>Espécie Contaminante</label>
+                <input type="text" id="especie_contaminante" name="especie_contaminante" 
+                       class="form-control" placeholder="Nome da espécie contaminante" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="data_contaminacao"><i class="fas fa-calendar-alt" style="margin-right: 8px;"></i>Data da Contaminação</label>
+                <input type="date" id="data_contaminacao" name="data_contaminacao" class="form-control">
+            </div>
+            
+            <button type="button" onclick="registrarContaminacao()" class="btn btn-warning">
+                <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+                Registrar Contaminação
+            </button>
+        </form>
+        {% else %}
+        <div class="alert alert-warning">
+            <strong>Contaminação Ativa:</strong> Esta colônia está contaminada por {{ colonia.contaminada_por }}.
+        </div>
+        
+        <form id="prevalenciaForm">
+            <div class="form-group">
+                <label for="data_prevalencia"><i class="fas fa-calendar-check" style="margin-right: 8px;"></i>Data da Resolução</label>
+                <input type="date" id="data_prevalencia" name="data_prevalencia" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="especie_prevaleceu"><i class="fas fa-trophy" style="margin-right: 8px;"></i>Espécie que Prevaleceu</label>
+                <select id="especie_prevaleceu" name="especie_prevaleceu" class="form-control" required>
+                    <option value="">Selecione...</option>
+                    <option value="{{ colonia.especie }}">{{ colonia.especie }} (original)</option>
+                    <option value="{{ colonia.contaminada_por }}">{{ colonia.contaminada_por }} (contaminante)</option>
+                </select>
+            </div>
+            
+            <button type="button" onclick="registrarPrevalencia()" class="btn btn-success">
+                <i class="fas fa-flag" style="margin-right: 8px;"></i>
+                Registrar Espécie Prevalente
+            </button>
+        </form>
+        {% endif %}
+        <div id="contaminacaoResult" class="mt-3"></div>
+        </div>
+        </div>
+
+        <!-- Histórico de Amostras -->
+        <div class="card">
+            <div class="card-header">
+                <span><i class="fas fa-history icon"></i> Histórico de Amostras</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data Coleta</th>
+                                <th>Local</th>
+                                <th>Status</th>
+                                <th>Análises</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaAmostrasBody">
+                            <!-- Dados serão carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+       <!-- Histórico de Contaminação -->
+<div class="card mt-4">
+    <div class="card-header">
+        <i class="fas fa-history mr-2"></i>Histórico de Contaminações
+    </div>
+    <div class="card-body">
+        {% if historico_contaminacoes %}
+        <div class="table-responsive">
+            <table class="table table-historico">
+                <thead>
+                    <tr>
+                        <th>Data Início</th>
+                        <th>Data Resolução</th>
+                        <th>Espécie Original</th>
+                        <th>Contaminante</th>
+                        <th>Espécie Prevalente</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cont in historico_contaminacoes %}
+                    <tr>
+                        <td>{{ cont.data_inicio or 'N/A' }}</td>
+                        <td>{{ cont.data_resolucao or 'N/A' }}</td>
+                        <td>{{ cont.especie_original or 'N/A' }}</td>
+                        <td>{{ cont.contaminante or 'N/A' }}</td>
+                        <td>{{ cont.especie_prevaleceu or 'N/A' }}</td>
+                        <td>
+                            <span class="badge {% if cont.status == 'ativa' %}badge-warning{% else %}badge-success{% endif %}">
+                                {{ cont.status or 'N/A' }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">Nenhum registro de contaminação encontrado.</p>
+        {% endif %}
+    </div>
+</div>
+        <!-- Seção de Hierarquia -->
+        <div class="relacionamentos">
+            <h2><i class="fas fa-project-diagram" style="margin-right: 10px;"></i>Árvore Genealógica da Colônia</h2>
+            <div class="arvore-genealogica">
+                {% if hierarquia.avo %}
+                <div class="geracao">
+                    <div class="geracao-titulo">Avó</div>
+                    <div class="colonia">
+                        <a href="{{ url_for('menu_colonia', codigo_colonia=hierarquia.avo.codigo_colonia) }}">
+                            <i class="fas fa-arrow-circle-right" style="margin-right: 5px;"></i>
+                            {{ hierarquia.avo.codigo_colonia }}
+                        </a>
+                    </div>
+                    <div class="conector"></div>
+                </div>
+                {% endif %}
+
+                {% if hierarquia.mae %}
+                <div class="geracao">
+                    <div class="geracao-titulo">Mãe</div>
+                    <div class="colonia">
+                        <a href="{{ url_for('menu_colonia', codigo_colonia=hierarquia.mae.codigo_colonia) }}">
+                            <i class="fas fa-arrow-circle-right" style="margin-right: 5px;"></i>
+                            {{ hierarquia.mae.codigo_colonia }}
+                        </a>
+                    </div>
+                    <div class="conector"></div>
+                </div>
+                {% endif %}
+
+                <div class="geracao">
+                    <div class="geracao-titulo">Colônia Atual</div>
+                    <div class="colonia atual">
+                        <i class="fas fa-star" style="margin-right: 5px;"></i>
+                        {{ colonia.codigo_colonia }}
+                    </div>
+                    {% if hierarquia.filhas %}
+                    <div class="conector"></div>
+                    {% endif %}
+                </div>
+
+                {% if hierarquia.filhas %}
+                <div class="geracao">
+                    <div class="geracao-titulo">Derivadas</div>
+                    {% for filha in hierarquia.filhas %}
+                    <div class="colonia">
+                        <a href="{{ url_for('menu_colonia', codigo_colonia=filha.codigo_colonia) }}">
+                            <i class="fas fa-arrow-circle-right" style="margin-right: 5px;"></i>
+                            {{ filha.codigo_colonia }}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Formulário de Realimentação
+        document.getElementById('realimentacaoForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const resultDiv = document.getElementById('realimentacaoResult');
+            resultDiv.innerHTML = '<div class="alert alert-info">Registrando realimentação...</div>';
+            
+            try {
+                const response = await fetch(`/colonia/{{ colonia.codigo_colonia }}/realimentar`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    throw new Error(`Resposta inesperada: ${text.substring(0, 100)}...`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>Realimentação registrada com sucesso!</strong>
+                            <p>Lote: ${data.data.lote_racao}</p>
+                            <p>Horário: ${new Date(data.data.timestamp).toLocaleString()}</p>
+                        </div>
+                    `;
+                    this.reset();
+                    document.getElementById('data_evento').value = new Date().toISOString().split('T')[0];
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <strong>Erro ao registrar realimentação:</strong>
+                            <p>${data.message}</p>
+                            ${data.detalhes ? `<p>${data.detalhes}</p>` : ''}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Erro na comunicação com o servidor:</strong>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+                console.error('Error:', error);
+            }
+        });
+
+        // Formulário de Coleta de Amostra
+        document.getElementById('coletaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const resultDiv = document.getElementById('coletaResult');
+            resultDiv.innerHTML = '<div class="alert alert-info">Registrando coleta de amostra...</div>';
+            
+            try {
+                const response = await fetch(`/colonia/{{ colonia.codigo_colonia }}/coletar_amostra`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    throw new Error(`Resposta inesperada: ${text.substring(0, 100)}...`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>Coleta registrada com sucesso!</strong>
+                            <p>ID da Amostra: ${data.data.amostra_id.split(':')[1]}</p>
+                            <p>Horário: ${new Date(data.data.timestamp).toLocaleString()}</p>
+                        </div>
+                    `;
+                    this.reset();
+                    document.getElementById('data_coleta').value = new Date().toISOString().split('T')[0];
+                    
+                    await Promise.all([
+                        carregarHistoricoAmostras(),
+                        carregarAmostrasParaAnalise()
+                    ]);
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <strong>Erro ao registrar coleta:</strong>
+                            <p>${data.message}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Erro na comunicação com o servidor:</strong>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+                console.error('Error:', error);
+            }
+        });
+
+        // Função para registrar análise
+        document.getElementById('analiseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            console.log('Evento submit capturado!');
+
+            const form = this;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            
+            submitBtn.disabled = true;
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="loading"></span> Processando...';
+
+            const resultDiv = document.getElementById('analiseResult');
+            resultDiv.innerHTML = '<div class="alert alert-info">Registrando análise...</div>';
+
+            try {
+                const requestId = Date.now();
+                const formData = new FormData(form);
+                formData.append('request_id', requestId);
+
+                const response = await fetch(`/colonia/{{ colonia.codigo_colonia }}/registrar_analise`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Request-ID': requestId.toString()
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>Análise registrada com sucesso!</strong>
+                            <p>ID: ${data.data.id_publico}</p>
+                            <div class="mt-3">
+                                <h4>QR Code para a Análise:</h4>
+                                <img src="data:image/png;base64,${data.data.qr_code_base64}" 
+                                     alt="QR Code da Análise" 
+                                     style="width: 150px; height: 150px;">
+                                <p class="text-muted">Escaneie este QR Code para acessar a análise</p>
+                                <a href="${data.data.analise_url}" target="_blank" class="btn btn-primary">
+                                    Ver Análise Completa
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    
+                    form.reset();
+                    document.getElementById('data_analise').value = new Date().toISOString().split('T')[0];
+                    document.getElementById('preview-fotos').innerHTML = '';
+                    
+                    await Promise.all([
+                        carregarHistoricoAmostras(),
+                        carregarAmostrasParaAnalise()
+                    ]);
+
+                } else {
+                    throw new Error(data.message || 'Erro desconhecido');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Falha no registro:</strong>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+                console.error('Erro:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+
+        // Função para carregar amostras para análise
+        async function carregarAmostrasParaAnalise() {
+            const select = document.getElementById('amostra_id');
+            select.innerHTML = '<option value="">Carregando amostras...</option>';
+            
+            try {
+                const response = await fetch(`/colonia/{{ colonia.codigo_colonia }}/listar_amostras`);
+                
+                if (!response.ok) {
+                    throw new Error(`Erro no servidor: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const amostrasPendentes = data.data.filter(a => 
+                        a.status_analise === 'aguardando análise');
+                    
+                    if (amostrasPendentes.length > 0) {
+                        select.innerHTML = '<option value="">Selecione uma amostra</option>' + 
+                            amostrasPendentes.map(a => {
+                                const id = a.id_amostra || a.element_id;
+                                const dataFormatada = a.data_coleta || 'sem data';
+                                return `<option value="${id}">Amostra ${id.substring(0, 8)} (${dataFormatada})</option>`;
+                            }).join('');
+                    } else {
+                        select.innerHTML = '<option value="">Nenhuma amostra pendente de análise</option>';
+                    }
+                } else {
+                    throw new Error(data.message || 'Erro ao processar amostras');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                select.innerHTML = `<option value="">Erro ao carregar amostras: ${error.message}</option>`;
+            }
+        }
+
+        // Função para registrar contaminação
+async function registrarContaminacao() {
+    const especie = document.getElementById('especie_contaminante').value;
+    const dataContaminacao = document.getElementById('data_contaminacao').value;
+    
+    if (!especie) {
+        alert('Por favor, informe a espécie contaminante');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/colonia/{{ colonia.codigo_colonia }}/registrar_contaminacao`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                especie_contaminante: especie,
+                data_contaminacao: dataContaminacao || new Date().toISOString().split('T')[0]
+            })
+        });
+        
+        const responseData = await response.json();
+        
+        if (responseData.status === 'success') {
+            alert('Contaminação registrada com sucesso!\nEspécie: ' + 
+                  responseData.data.especie + '\nData: ' + responseData.data.data);
+            window.location.reload();
+        } else {
+            alert('Erro: ' + (responseData.message || 'Resposta inválida do servidor'));
+        }
+    } catch (error) {
+        alert('Erro na comunicação com o servidor: ' + error.message);
+        console.error('Error:', error);
+    }
+}
+
+        // Função para registrar espécie que prevaleceu
+        async function registrarPrevalencia() {
+    const especie = document.getElementById('especie_prevaleceu').value;
+    const dataPrevalencia = document.getElementById('data_prevalencia').value;
+    
+    if (!especie || !dataPrevalencia) {
+        alert('Por favor, preencha todos os campos');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/colonia/{{ colonia.codigo_colonia }}/registrar_prevalencia`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                especie_prevaleceu: especie,
+                data_resolucao: dataPrevalencia
+            })
+        });
+        
+        const responseData = await response.json();
+        
+        if (responseData.status === 'success') {
+            alert('Resolução de contaminação registrada com sucesso!');
+            window.location.reload();
+        } else {
+            alert('Erro: ' + (responseData.message || 'Resposta inválida do servidor'));
+        }
+    } catch (error) {
+        alert('Erro na comunicação com o servidor: ' + error.message);
+        console.error('Error:', error);
+    }
+}
+
+        // Função para carregar histórico de amostras
+        async function carregarHistoricoAmostras() {
+            const tbody = document.getElementById('tabelaAmostrasBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center">Carregando...</td></tr>';
+            
+            try {
+                const response = await fetch(`/colonia/{{ colonia.codigo_colonia }}/listar_amostras`);
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.data.length > 0) {
+                    tbody.innerHTML = data.data.map(a => {
+                        const id = a.id_amostra || a.element_id;
+                        const local = Array.isArray(a.local) ? a.local.join(', ') : a.local || 'N/A';
+                        const shortId = id.substring(0, 8);
+                        
+                        let analisesHtml = '<span class="text-muted">Nenhuma</span>';
+                        if (a.ids_analise && a.ids_analise.length > 0) {
+                            analisesHtml = a.ids_analise.map(analiseId => 
+                                `<a href="/analise/${analiseId}" class="badge badge-info" target="_blank">
+                                    ${analiseId.substring(0, 8)}
+                                 </a>`
+                            ).join(' ');
+                        }
+                        
+                        return `
+                            <tr>
+                                <td>${shortId}</td>
+                                <td>${a.data_coleta || 'N/A'}</td>
+                                <td>${local}</td>
+                                <td>
+                                    <span class="badge ${a.status_analise === 'analisada' ? 'badge-success' : 'badge-warning'}">
+                                        ${a.status_analise || 'N/A'}
+                                    </span>
+                                </td>
+                                <td>${analisesHtml}</td>
+                                <td>
+                                    ${a.status_analise === 'aguardando análise' ? 
+                                      `<button class="btn btn-sm btn-primary" onclick="preencherAnalise('${id}')">
+                                        Analisar
+                                      </button>` : 
+                                      '<span class="text-muted">-</span>'}
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">Nenhuma amostra coletada ainda</td></tr>';
+                }
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">Erro ao carregar histórico</td></tr>';
+                console.error('Erro:', error);
+            }
+        }
+
+        // Função auxiliar para ver análises existentes
+        function verAnalises(amostraId) {
+            alert(`Ver análises para amostra ${amostraId}`);
+        }
+
+        // Preenche automaticamente o ID da amostra no formulário de análise
+        function preencherAnalise(amostraId) {
+            if (!amostraId) {
+                console.error('ID da amostra é nulo');
+                return;
+            }
+            
+            const select = document.getElementById('amostra_id');
+            const option = Array.from(select.options).find(opt => opt.value === amostraId);
+            
+            if (option) {
+                select.value = amostraId;
+            } else {
+                console.warn(`Amostra ${amostraId} não encontrada no dropdown`);
+            }
+            
+            document.getElementById('analiseForm').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Pré-visualização de fotos antes do upload
+        function previewFotos() {
+            const preview = document.getElementById('preview-fotos');
+            preview.innerHTML = '';
+            const files = document.getElementById('fotos_analise').files;
+    
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+        
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('preview-foto');
+                    preview.appendChild(img);
+                }
+        
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Função para inativar colônia
+        async function inativarColonia() {
+            const motivo = prompt('Digite o motivo da inativação:');
+            if (motivo === null) return;
+            
+            const dataDesativacao = prompt('Data de desativação (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
+            if (dataDesativacao === null) return;
+            
+            try {
+                const formData = new FormData();
+                formData.append('data_desativacao', dataDesativacao);
+                formData.append('motivo', motivo);
+                
+                const response = await fetch(`/colonia/{{ colonia.codigo_colonia }}/inativar`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    alert(`Colônia {{ colonia.codigo_colonia }} inativada com sucesso!`);
+                    window.location.reload();
+                } else {
+                    alert(`Erro: ${data.message}`);
+                }
+            } catch (error) {
+                alert('Erro ao inativar colônia: ' + error.message);
+                console.error('Error:', error);
+            }
+        }
+
+        // Função auxiliar para formatar datas
+        function formatarData(dataString) {
+            if (!dataString) return 'sem data';
+            try {
+                const date = new Date(dataString);
+                return date.toLocaleDateString('pt-BR');
+            } catch {
+                return dataString;
+            }
+        }
+
+        // Carregar dados iniciais
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                carregarHistoricoAmostras();
+                carregarAmostrasParaAnalise();
+            }, 100);
+        });
+    </script>
+</body>
+</html>
