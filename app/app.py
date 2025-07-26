@@ -17,7 +17,8 @@ import json
 from os import environ
 from time import sleep
 from py2neo import Graph, DatabaseError
-
+from dotenv import load_dotenv
+import os
 
 # Configuração da aplicação Flask
 app = Flask(__name__)
@@ -45,11 +46,12 @@ retry_delay = 5
 
 for i in range(max_retries):
     try:
+        load_dotenv()  # Carrega variáveis do .env
+
         graph = Graph(
-            environ.get('NEO4J_BOLT_URL', 'bolt://neo4j:7687'),
-            auth=(environ.get('NEO4J_USER', 'neo4j'), environ.get('NEO4J_PASSWORD', '@lmq2023')),
-            secure=False,
-            name="neo4j"
+        os.getenv('NEO4J_BOLT_URL'),
+        auth=(os.getenv('NEO4J_USER'), os.getenv('NEO4J_PASSWORD')),
+        secure=False
         )
         graph.run("RETURN 1 AS test").data()
         logger.info("Conexão com Neo4j estabelecida com sucesso")

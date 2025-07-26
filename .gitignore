@@ -11,3 +11,7 @@ analises/
 __pycache__/
 *.pyc
 .env
+
+.env
+*.env
+config/credentials.*
