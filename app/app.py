@@ -19,10 +19,90 @@ from time import sleep
 from py2neo import Graph, DatabaseError
 from dotenv import load_dotenv
 import os
+from flask import Flask, redirect, url_for, session, flash
+from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
 # Configuração da aplicação Flask
 app = Flask(__name__)
 
+app.secret_key = 'sua_chave_secreta_muito_segura'
+
+# Dados de usuários em memória (substituir por DB depois se necessário)
+USERS = {
+    'admin': {
+        'password': generate_password_hash('admin123'),
+        'role': 'admin'
+    },
+    'usuario': {
+        'password': generate_password_hash('senha123'),
+        'role': 'user'
+    }
+}
+
+# Decorator para rotas protegidas
+def login_required(role="user"):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if 'username' not in session:
+                flash('Faça login para acessar esta página', 'warning')
+                return redirect(url_for('login'))
+            
+            if role != "user" and USERS.get(session['username'], {}).get('role') != role:
+                flash('Acesso não autorizado', 'danger')
+                return redirect(url_for('login'))
+                
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+# Rotas de Autenticação
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        user = USERS.get(username)
+        
+        if user and check_password_hash(user['password'], password):
+            session['username'] = username
+            session['role'] = user['role']
+            flash('Login realizado com sucesso!', 'success')
+            return redirect(url_for('menu_colonia', codigo_colonia='default'))
+        
+        flash('Usuário ou senha incorretos', 'danger')
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('Você foi desconectado', 'info')
+    return redirect(url_for('login'))
+
+# Rotas Protegidas
+@app.route('/colonia/<codigo_colonia>')
+@login_required()
+def menu_colonia(codigo_colonia):
+    return render_template('menu.html', 
+                         colonia={'codigo_colonia': codigo_colonia},
+                         username=session.get('username'))
+
+@app.route('/admin')
+@login_required(role="admin")
+def admin_panel():
+    return render_template('admin.html', users=USERS)
+
+# Rota de erro
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('erro.html', mensagem='Página não encontrada'), 404
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
+    
 # Configuração de logging
 logging.basicConfig(
     level=logging.INFO,

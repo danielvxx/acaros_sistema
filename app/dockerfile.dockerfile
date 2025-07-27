@@ -14,5 +14,7 @@ ENV UPLOAD_FOLDER=/app/analises
 RUN mkdir -p ${UPLOAD_FOLDER}
 
 EXPOSE 5000
+# Adicione esta linha para garantir que os templates sejam copiados
+COPY ./templates /app/templates
 
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]

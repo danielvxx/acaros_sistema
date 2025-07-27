@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin</title>
+</head>
+<body>
+    <h1>Painel Administrativo</h1>
+    <h2>Usuários Cadastrados</h2>
+    <ul>
+        {% for username, data in users.items() %}
+            <li>{{ username }} ({{ data.role }})</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('menu_colonia', codigo_colonia='default') }}">Voltar</a>
+</body>
+</html>

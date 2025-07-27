@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu</title>
+</head>
+<body>
+    <h1>Bem-vindo, {{ username }}!</h1>
+    <h2>Colônia: {{ colonia.codigo_colonia }}</h2>
+    
+    {% if session.role == 'admin' %}
+        <a href="{{ url_for('admin_panel') }}">Painel Admin</a>
+    {% endif %}
+    
+    <a href="{{ url_for('logout') }}">Sair</a>
+</body>
+</html>
